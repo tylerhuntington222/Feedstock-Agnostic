@@ -56,9 +56,6 @@ curr.biorefs <- readRDS("../clean_binary_data/biorefs.sptdf.RDS")
 # load county polygons data
 counties <- readRDS("../clean_binary_data/counties.spdf.RDS")
 
-# TODO: load centroids data for all US counties
-centroids <- readRDS("../output/data_products/US.cluster.cents.sp.RDS")
-
 # load US road network
 road.net <- readRDS("../clean_binary_data/roads.sldf.RDS")
 
@@ -100,11 +97,17 @@ saveRDS(p.refs, "../output/data_products/mw.potential.ref.points.RDS")
 # determine ag cents in range of p.refs
 range <- 50
 crop <- "EnergyCrops"
+
+# load centroids data for chosen crop type
+centroids <- readRDS(paste0("../output/data_products/US.cluster.cents.", crop, ".RDS"))
+
+# calculate biosheds for chosen crop
 biosheds <- FindPointsInRange(p.refs, crop = crop, 
                               road.net, 
                               constraint = "distance", max.dist = range, 
                               max.time = NULL)
 
+# export biosheds
 saveRDS(biosheds, paste0("../output/data_products/",
                          "potential_midwest_ref_biosheds_", 
                          crop, range, "mi.RDS"))
@@ -122,6 +125,7 @@ p.refs <- SumBioshedFeeds(counties,
                           bt.data,
                           feed_choices = feeds)
 
+# export biosheds as spatial object
 saveRDS(p.refs, paste0("../output/data_products/",
                        "potential_midwest_refs_sp_", 
                        crop, range, "mi.RDS"))
