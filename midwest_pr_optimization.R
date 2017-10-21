@@ -102,10 +102,9 @@ crop <- "EnergyCrops"
 centroids <- readRDS(paste0("../output/data_products/US.cluster.cents.", crop, ".RDS"))
 
 # calculate biosheds for chosen crop
-biosheds <- FindPointsInRange(p.refs, crop = crop, 
-                              road.net, 
-                              constraint = "distance", max.dist = range, 
-                              max.time = NULL)
+biosheds <- CalcBiosheds(p.refs, crop = crop, 
+                         road.net, 
+                         constraint = "distance", max.dist = range)
 
 # export biosheds
 saveRDS(biosheds, paste0("../output/data_products/",
